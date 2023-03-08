@@ -4,7 +4,11 @@ import requests
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen as uReq
 import logging
-logging.basicConfig(filename="scrapper.log" , level=logging.INFO)
+import os
+import pymongo
+
+
+logging.basicConfig(filename="//config/workspace/review-scrapper-aws-main/scrapper.log" , level=logging.INFO)
 
 app = Flask(__name__)
 
@@ -32,10 +36,13 @@ def index():
             print(prod_html)
             commentboxes = prod_html.find_all('div', {'class': "_16PBlm"})
 
-            filename = searchString + ".csv"
-            fw = open(filename, "w")
-            headers = "Product, Customer Name, Rating, Heading, Comment \n"
-            fw.write(headers)
+            # Creating a CSV file:
+            # filename = searchString + ".csv"
+            # fw = open(filename, "w")
+            # headers = "Product, Customer Name, Rating, Heading, Comment \n"
+            # fw.write(headers)
+
+
             reviews = []
             for commentbox in commentboxes:
                 try:
@@ -72,6 +79,15 @@ def index():
                           "Comment": custComment}
                 reviews.append(mydict)
             logging.info("log my final result {}".format(reviews))
+
+
+            # connectiong to mongoDB
+            # mongo_uri = os.environ.get("connection_url")
+            # client = pymongo.MongoClient(mongo_uri)
+            # db = client["Flipkart_Review_Scrapper"]
+            # colls = db["Reviews"]
+            # colls.insert_many(reviews)
+
             return render_template('result.html', reviews=reviews[0:(len(reviews)-1)])
         except Exception as e:
             logging.info(e)
