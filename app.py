@@ -8,7 +8,7 @@ import os
 import pymongo
 
 
-logging.basicConfig(filename="//config/workspace/review-scrapper-aws-main/scrapper.log" , level=logging.INFO)
+logging.basicConfig(filename="scrapper.log" , level=logging.INFO)
 
 app = Flask(__name__)
 
